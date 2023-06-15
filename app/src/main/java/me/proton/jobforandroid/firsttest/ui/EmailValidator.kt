@@ -1,4 +1,4 @@
-package me.proton.jobforandroid.firsttest
+package me.proton.jobforandroid.firsttest.ui
 
 import android.text.Editable
 import android.text.TextWatcher
