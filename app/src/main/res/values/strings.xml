@@ -5,9 +5,9 @@
     <string name="email_hint">Enter your Email</string>
     <string name="invalid_email">Invalid email</string>
     <string name="valid_email">OK</string>
-    <string name="repeat_email_label">Repeat email address:</string>
-    <string name="emails_not_equal">Emails not equal</string>
-    <string name="enter_name">Enter your name</string>
-    <string name="name_hint">Enter name here</string>
-    <string name="invalid_name">Invalid name</string>
+    <string name="repo_full_name">repo full name</string>
+    <string name="search_hint">Enter keyword e.g. android</string>
+    <string name="enter_search_word">Enter search word</string>
+    <string name="results_count">Number of results: %d</string>
+    <string name="undefined_error">Undefined error</string>
 </resources>
