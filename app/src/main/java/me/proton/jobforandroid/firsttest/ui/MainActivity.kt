@@ -8,6 +8,8 @@ import me.proton.jobforandroid.firsttest.R
 import me.proton.jobforandroid.firsttest.databinding.ActivityMainBinding
 import me.proton.jobforandroid.firsttest.mvp.presenter.MainPresenter
 import me.proton.jobforandroid.firsttest.mvp.view.MainView
+import moxy.MvpAppCompatActivity
+import moxy.presenter.InjectPresenter
 
 class MainActivity : MvpAppCompatActivity(), MainView {
 
@@ -15,7 +17,6 @@ class MainActivity : MvpAppCompatActivity(), MainView {
 
     @InjectPresenter
     lateinit var mainPresenter: MainPresenter
-
     private val emailValidator = EmailValidator()
 
     override fun onCreate(savedInstanceState: Bundle?) {
