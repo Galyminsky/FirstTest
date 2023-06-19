@@ -7,19 +7,25 @@ import android.widget.TextView.OnEditorActionListener
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import me.proton.jobforandroid.firsttest.R
+import me.proton.jobforandroid.firsttest.databinding.ActivityDetailsBinding
 import me.proton.jobforandroid.firsttest.databinding.ActivityMainBinding
 import me.proton.jobforandroid.firsttest.model.SearchResult
+import me.proton.jobforandroid.firsttest.presenter.RepositoryContract
 import me.proton.jobforandroid.firsttest.presenter.search.PresenterSearchContract
 import me.proton.jobforandroid.firsttest.presenter.search.SearchPresenter
+import me.proton.jobforandroid.firsttest.repository.FakeGitHubRepository
 import me.proton.jobforandroid.firsttest.repository.GitHubApi
 import me.proton.jobforandroid.firsttest.repository.GitHubRepository
 import me.proton.jobforandroid.firsttest.view.details.DetailsActivity
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.*
+import me.proton.jobforandroid.firsttest.BuildConfig
 
 class MainActivity : AppCompatActivity(), ViewSearchContract {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var detailsBinding: ActivityDetailsBinding
 
     private val adapter = SearchResultAdapter()
     private val presenter: PresenterSearchContract = SearchPresenter(this, createRepository())
@@ -29,13 +35,8 @@ class MainActivity : AppCompatActivity(), ViewSearchContract {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        detailsBinding = ActivityDetailsBinding.inflate(layoutInflater)
         setUI()
-        presenter.onAttach()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        presenter.onDetach()
     }
 
     private fun setUI() {
@@ -71,8 +72,12 @@ class MainActivity : AppCompatActivity(), ViewSearchContract {
         })
     }
 
-    private fun createRepository(): GitHubRepository {
-        return GitHubRepository(createRetrofit().create(GitHubApi::class.java))
+    private fun createRepository(): RepositoryContract {
+        return if (BuildConfig.TYPE == FAKE) {
+            FakeGitHubRepository()
+        } else {
+            GitHubRepository(createRetrofit().create(GitHubApi::class.java))
+        }
     }
 
     private fun createRetrofit(): Retrofit {
@@ -86,6 +91,12 @@ class MainActivity : AppCompatActivity(), ViewSearchContract {
         searchResults: List<SearchResult>,
         totalCount: Int
     ) {
+        with(detailsBinding.totalCountTextView) {
+            visibility = View.VISIBLE
+            text =
+                String.format(Locale.getDefault(), getString(R.string.results_count), totalCount)
+        }
+
         this.totalCount = totalCount
         adapter.updateResults(searchResults)
     }
@@ -108,5 +119,6 @@ class MainActivity : AppCompatActivity(), ViewSearchContract {
 
     companion object {
         const val BASE_URL = "https://api.github.com"
+        const val FAKE = "FAKE"
     }
 }
