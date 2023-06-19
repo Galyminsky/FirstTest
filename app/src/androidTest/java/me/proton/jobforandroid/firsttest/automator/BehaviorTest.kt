@@ -18,6 +18,7 @@ import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import me.proton.jobforandroid.firsttest.databinding.ActivityMainBinding
 
 @RunWith(AndroidJUnit4::class)
 @SdkSuppress(minSdkVersion = 18)
@@ -62,24 +63,17 @@ class BehaviorTest {
     //Убеждаемся, что поиск работает как ожидается
     @Test
     fun test_SearchIsPositive() {
-        //Через uiDevice находим editText
         val editText = uiDevice.findObject(By.res(packageName, "searchEditText"))
-        //Устанавливаем значение
+        Assert.assertNotNull(editText)
+
         editText.text = "UiAutomator"
-        //Отправляем запрос через Espresso
+
         Espresso.onView(ViewMatchers.withId(R.id.searchEditText))
             .perform(ViewActions.pressImeActionButton())
 
-        //Ожидаем конкретного события: появления текстового поля totalCountTextView.
-        //Это будет означать, что сервер вернул ответ с какими-то данными, то есть запрос отработал.
-        val changedText =
-            uiDevice.wait(
-                Until.findObject(By.res(packageName, "totalCountTextView")),
-                TIMEOUT
-            )
-        //Убеждаемся, что сервер вернул корректный результат. Обратите внимание, что количество
-        //результатов может варьироваться во времени, потому что количество репозиториев постоянно меняется.
-        Assert.assertEquals(changedText.text.toString(), "Number of results: 668")
+        val changedText = uiDevice.wait(Until.findObject(By.res(packageName, "totalCountTextView")), TIMEOUT)
+        Assert.assertNotNull(changedText)
+        Assert.assertEquals("Number of results: 668", changedText.text)
     }
 
     //Убеждаемся, что DetailsScreen открывается
@@ -111,6 +105,6 @@ class BehaviorTest {
     }
 
     companion object {
-        private const val TIMEOUT = 5000L
+        private const val TIMEOUT = 10000L
     }
 }

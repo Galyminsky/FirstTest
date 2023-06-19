@@ -14,6 +14,7 @@ import org.junit.runner.RunWith
 @SdkSuppress(minSdkVersion = 18)
 class InitialTest {
 
+
     //Контекст нам понадобится для запуска нужных экранов и получения packageName
     private val context = ApplicationProvider.getApplicationContext<Context>()
 
