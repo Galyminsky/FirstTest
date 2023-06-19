@@ -1,11 +1,10 @@
 package me.proton.jobforandroid.firsttest.presenter.search
 
-import me.proton.jobforandroid.firsttest.model.SearchResponse
 import me.proton.jobforandroid.firsttest.presenter.RepositoryContract
 import me.proton.jobforandroid.firsttest.repository.RepositoryCallback
 import me.proton.jobforandroid.firsttest.view.search.ViewSearchContract
+import me.proton.jobforandroid.firsttest.model.SearchResponse
 import retrofit2.Response
-
 
 internal class SearchPresenter internal constructor(
     private val viewContract: ViewSearchContract,
