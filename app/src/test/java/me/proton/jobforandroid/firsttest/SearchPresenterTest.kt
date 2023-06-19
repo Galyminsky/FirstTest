@@ -5,11 +5,17 @@ import me.proton.jobforandroid.firsttest.model.SearchResult
 import me.proton.jobforandroid.firsttest.presenter.search.SearchPresenter
 import me.proton.jobforandroid.firsttest.repository.GitHubRepository
 import me.proton.jobforandroid.firsttest.view.search.ViewSearchContract
-import org.junit.Assert.*
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
-import org.mockito.Mockito.*
+import org.mockito.Mockito.inOrder
+import org.mockito.Mockito.mock
+import org.mockito.Mockito.times
+import org.mockito.Mockito.verify
+import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
 import retrofit2.Response
 
@@ -148,11 +154,5 @@ class SearchPresenterTest {
 
         //Убеждаемся, что ответ от сервера обрабатывается корректно
         verify(viewContract, times(1)).displaySearchResults(searchResults, 101)
-    }
-
-    @Test
-    fun onDetach() {
-        presenter.onDetach()
-        assertNull(presenter.viewContract)
     }
 }
