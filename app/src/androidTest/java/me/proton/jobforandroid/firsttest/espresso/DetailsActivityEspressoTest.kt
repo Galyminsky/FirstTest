@@ -1,4 +1,4 @@
-package me.proton.jobforandroid.firsttest
+package me.proton.jobforandroid.firsttest.espresso
 
 import android.widget.TextView
 import androidx.lifecycle.Lifecycle
@@ -9,6 +9,7 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import junit.framework.TestCase
+import me.proton.jobforandroid.firsttest.R
 import me.proton.jobforandroid.firsttest.view.details.DetailsActivity
 import org.junit.After
 import org.junit.Before
