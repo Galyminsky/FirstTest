@@ -20,7 +20,6 @@ import org.junit.runner.RunWith
 class DetailsActivityEspressoTest {
 
     private lateinit var scenario: ActivityScenario<DetailsActivity>
-
     @Before
     fun setup() {
         scenario = ActivityScenario.launch(DetailsActivity::class.java)
