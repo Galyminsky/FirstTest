@@ -1,7 +1,7 @@
 package me.proton.jobforandroid.firsttest.view.search
 
-import me.proton.jobforandroid.firsttest.view.ViewContract
 import me.proton.jobforandroid.firsttest.model.SearchResult
+import me.proton.jobforandroid.firsttest.view.ViewContract
 
 internal interface ViewSearchContract : ViewContract {
     fun displaySearchResults(

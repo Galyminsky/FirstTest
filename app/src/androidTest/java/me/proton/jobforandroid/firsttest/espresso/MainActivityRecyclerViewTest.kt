@@ -58,6 +58,7 @@ class MainActivityRecyclerViewTest {
         }
     }
 
+
     @Test
     fun activitySearch_PerformClickOnItem() {
         if (BuildConfig.TYPE == MainActivity.FAKE) {

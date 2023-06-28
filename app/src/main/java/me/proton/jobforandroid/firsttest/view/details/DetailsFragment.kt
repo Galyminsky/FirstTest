@@ -15,16 +15,16 @@ import java.util.Locale
 class DetailsFragment : Fragment(), ViewDetailsContract {
 
     private var _detailsBinding: FragmentDetailsBinding? = null
-    private val detailsBinding get() = _detailsBinding!!
-
+    private val detailsBinding get() = _detailsBinding
     private val presenter: PresenterDetailsContract = DetailsPresenter(this)
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
+    ): View? {
         _detailsBinding = FragmentDetailsBinding.inflate(inflater, container, false)
-        return detailsBinding.root
+        return detailsBinding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -38,8 +38,8 @@ class DetailsFragment : Fragment(), ViewDetailsContract {
             presenter.setCounter(counter)
             setCountText(counter)
         }
-        detailsBinding.decrementButton.setOnClickListener { presenter.onDecrement() }
-        detailsBinding.incrementButton.setOnClickListener { presenter.onIncrement() }
+        detailsBinding?.decrementButton?.setOnClickListener { presenter.onDecrement() }
+        detailsBinding?.incrementButton?.setOnClickListener { presenter.onIncrement() }
     }
 
     override fun setCount(count: Int) {
@@ -47,7 +47,7 @@ class DetailsFragment : Fragment(), ViewDetailsContract {
     }
 
     private fun setCountText(count: Int) {
-        detailsBinding.totalCountTextView.text =
+        detailsBinding?.totalCountTextView?.text =
             String.format(Locale.getDefault(), getString(R.string.results_count), count)
     }
 

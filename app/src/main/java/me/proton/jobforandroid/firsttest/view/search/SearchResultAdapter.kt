@@ -1,5 +1,6 @@
 package me.proton.jobforandroid.firsttest.view.search
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,12 +35,14 @@ internal class SearchResultAdapter : RecyclerView.Adapter<SearchResultViewHolder
         return results.size
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun updateResults(results: List<SearchResult>) {
         this.results = results
         notifyDataSetChanged()
     }
 
     internal class SearchResultViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
         private val repositoryName: TextView = itemView.findViewById(R.id.repositoryName)
         fun bind(searchResult: SearchResult) {
             repositoryName.text = searchResult.fullName

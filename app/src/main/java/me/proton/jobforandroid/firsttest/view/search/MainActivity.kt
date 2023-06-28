@@ -6,29 +6,30 @@ import android.view.inputmethod.EditorInfo
 import android.widget.TextView.OnEditorActionListener
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
+import me.proton.jobforandroid.firsttest.BuildConfig
 import me.proton.jobforandroid.firsttest.R
 import me.proton.jobforandroid.firsttest.databinding.ActivityMainBinding
 import me.proton.jobforandroid.firsttest.databinding.FragmentDetailsBinding
 import me.proton.jobforandroid.firsttest.model.SearchResult
 import me.proton.jobforandroid.firsttest.presenter.RepositoryContract
-import me.proton.jobforandroid.firsttest.presenter.search.PresenterSearchContract
-import me.proton.jobforandroid.firsttest.presenter.search.SearchPresenter
 import me.proton.jobforandroid.firsttest.repository.FakeGitHubRepository
 import me.proton.jobforandroid.firsttest.repository.GitHubApi
 import me.proton.jobforandroid.firsttest.repository.GitHubRepository
 import me.proton.jobforandroid.firsttest.view.details.DetailsActivity
 import retrofit2.Retrofit
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.*
-import me.proton.jobforandroid.firsttest.BuildConfig
+import java.util.Locale
 
 class MainActivity : AppCompatActivity(), ViewSearchContract {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var detailsBinding: FragmentDetailsBinding
-
     private val adapter = SearchResultAdapter()
-    private val presenter: PresenterSearchContract = SearchPresenter(this, createRepository())
+    private val viewModel: SearchViewModel by lazy {
+        ViewModelProvider(this).get(SearchViewModel::class.java)
+    }
     private var totalCount: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,6 +37,38 @@ class MainActivity : AppCompatActivity(), ViewSearchContract {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setUI()
+        viewModel.subscribeToLiveData().observe(this) { onStateChange(it) }
+    }
+
+    private fun onStateChange(screenState: ScreenState) {
+        when (screenState) {
+            is ScreenState.Working -> {
+                val searchResponse = screenState.searchResponse
+                val totalCount = searchResponse.totalCount
+                binding.progressBar.visibility = View.GONE
+                with(detailsBinding.totalCountTextView) {
+                    visibility = View.VISIBLE
+                    text =
+                        String.format(
+                            Locale.getDefault(),
+                            getString(R.string.results_count),
+                            totalCount
+                        )
+                }
+
+                this.totalCount = totalCount!!
+                adapter.updateResults(searchResponse.searchResults!!)
+            }
+
+            is ScreenState.Loading -> {
+                binding.progressBar.visibility = View.VISIBLE
+            }
+
+            is ScreenState.Error -> {
+                binding.progressBar.visibility = View.GONE
+                Toast.makeText(this, screenState.error.message, Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun setUI() {
@@ -56,7 +89,7 @@ class MainActivity : AppCompatActivity(), ViewSearchContract {
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 val query = binding.searchEditText.text.toString()
                 if (query.isNotBlank()) {
-                    presenter.searchGitHub(query)
+                    viewModel.searchGitHub(query)
                     return@OnEditorActionListener true
                 } else {
                     Toast.makeText(
@@ -82,6 +115,7 @@ class MainActivity : AppCompatActivity(), ViewSearchContract {
     private fun createRetrofit(): Retrofit {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
@@ -115,6 +149,7 @@ class MainActivity : AppCompatActivity(), ViewSearchContract {
             binding.progressBar.visibility = View.GONE
         }
     }
+
     companion object {
         const val BASE_URL = "https://api.github.com"
         const val FAKE = "FAKE"
