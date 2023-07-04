@@ -22,10 +22,8 @@ import retrofit2.Response
 class SearchPresenterTest {
 
     private lateinit var presenter: SearchPresenter
-
     @Mock
     private lateinit var repository: GitHubRepository
-
     @Mock
     private lateinit var viewContract: ViewSearchContract
 
